@@ -9,8 +9,9 @@ import (
 )
 
 type gameState struct {
-	screen      tcell.Screen
-	paddleCoord *coord
+	screen tcell.Screen
+	p1     *coord
+	p2     *coord
 }
 
 type coord struct {
@@ -37,7 +38,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	gs := gameState{screen: s, paddleCoord: &coord{2, 5}}
+	gs := gameState{screen: s, p1: &coord{2, 5}, p2: &coord{2, 5}}
 
 	s.Clear()
 	s.DisableMouse()
@@ -92,9 +93,9 @@ func main() {
 
 func movePaddle(gs gameState, dir tcell.Key) {
 	if dir == tcell.KeyUp {
-		gs.paddleCoord.up()
+		gs.p1.up()
 	} else {
-		gs.paddleCoord.down()
+		gs.p1.down()
 	}
 
 	gs.screen.Show()
@@ -133,19 +134,19 @@ func drawBorder(s tcell.Screen) error {
 }
 
 func drawLeftPaddle(gs gameState) {
-	drawPaddle(gs, 2)
+	drawPaddle(gs.p1, gs.screen, 2)
 }
 
 func drawRightPaddle(gs gameState) {
-	drawPaddle(gs, 110)
+	drawPaddle(gs.p2, gs.screen, 110)
 }
 
-func drawPaddle(gs gameState, x int) {
+func drawPaddle(p *coord, s tcell.Screen, x int) {
 	// Left is x = 1, should start at y = 2, end at y = 6
 
 	style := tcell.StyleDefault.Foreground(tcell.ColorWhite)
-	for i := gs.paddleCoord.yTop; i <= gs.paddleCoord.yBot; i++ {
-		gs.screen.SetContent(x, i, tcell.RuneBlock, nil, style)
+	for i := p.yTop; i <= p.yBot; i++ {
+		s.SetContent(x, i, tcell.RuneBlock, nil, style)
 	}
 }
 
