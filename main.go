@@ -17,14 +17,6 @@ type gameState struct {
 	ticks  int
 }
 
-func (gs *gameState) tick() {
-	if gs.ticks > 10 {
-		gs.ticks = 0
-	} else {
-		gs.ticks += 1
-	}
-}
-
 func (gs *gameState) moveBall() {
 	if gs.ball.dir == "L" {
 		// collision
@@ -113,7 +105,7 @@ func main() {
 	go func() {
 		ticknum := 0
 		for {
-			time.Sleep(time.Millisecond * 100)
+			time.Sleep(time.Millisecond * 50)
 			tick <- ticknum
 			ticknum++
 		}
@@ -149,7 +141,6 @@ func main() {
 func keyboardEventLoop(ch chan tcell.Key, kill chan bool, gs gameState) {
 	// main event loop listening to keyboard events
 	for {
-
 		ev := gs.screen.PollEvent()
 		switch ev := ev.(type) {
 		case *tcell.EventResize:
@@ -163,15 +154,6 @@ func keyboardEventLoop(ch chan tcell.Key, kill chan bool, gs gameState) {
 				ch <- ev.Key()
 			}
 		}
-	}
-}
-
-func runGame(gs gameState) {
-	for {
-		time.Sleep(100 * time.Millisecond)
-		gs.tick()
-		gs.moveBall()
-		drawBall(gs)
 	}
 }
 
@@ -221,8 +203,9 @@ func drawLeftPaddle(gs gameState) {
 	drawPaddle(gs.p1, gs.screen, 2)
 }
 
+// "AI" matches the balls y value for now
 func drawRightPaddle(gs gameState) {
-	drawPaddle(gs.p2, gs.screen, 110)
+	drawPaddle(&coord{gs.ball.y - 2, gs.ball.y + 1}, gs.screen, 110)
 }
 
 func drawPaddle(p *coord, s tcell.Screen, x int) {
