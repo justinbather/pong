@@ -4,6 +4,7 @@ import (
 	"errors"
 	"log"
 	"os"
+	"time"
 
 	"github.com/gdamore/tcell"
 )
@@ -12,6 +13,25 @@ type gameState struct {
 	screen tcell.Screen
 	p1     *coord
 	p2     *coord
+	ball   *ball
+	ticks  int
+}
+
+func (gs *gameState) tick() {
+	if gs.ticks > 10 {
+		gs.ticks = 0
+	} else {
+		gs.ticks += 1
+	}
+}
+
+func (gs *gameState) moveBall() {
+	gs.ball.x -= 1
+}
+
+type ball struct {
+	x int
+	y int
 }
 
 type coord struct {
@@ -38,7 +58,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	gs := gameState{screen: s, p1: &coord{2, 5}, p2: &coord{2, 5}}
+	gs := gameState{screen: s, p1: &coord{2, 5}, p2: &coord{2, 5}, ball: &ball{55, 20}, ticks: 0}
 
 	s.Clear()
 	s.DisableMouse()
@@ -50,7 +70,7 @@ func main() {
 	// right
 	drawRightPaddle(gs)
 
-	drawBall(s)
+	drawBall(gs)
 
 	quit := func() {
 		// You have to catch panics in a defer, clean up, and
@@ -65,29 +85,74 @@ func main() {
 	}
 	defer quit()
 
+	keyEvent := make(chan tcell.Key)
+	kill := make(chan bool)
+	tick := make(chan int)
+
+	go keyboardEventLoop(keyEvent, kill, gs)
+
+	go func() {
+		ticknum := 0
+		for {
+			time.Sleep(time.Millisecond * 100)
+			tick <- ticknum
+			ticknum++
+		}
+	}()
+
+	// game loop
 	for {
 		gs.screen.Clear()
-		ev := gs.screen.PollEvent()
 
+		select {
+		case ev := <-keyEvent:
+			if ev == tcell.KeyUp {
+				gs.p1.up()
+			} else {
+				gs.p1.down()
+			}
+
+		case <-kill:
+			return
+
+		case <-tick:
+			gs.moveBall()
+		}
+
+		drawBorder(gs.screen)
+		drawBall(gs)
+		drawLeftPaddle(gs)
+		drawRightPaddle(gs)
+		gs.screen.Show()
+	}
+}
+
+func keyboardEventLoop(ch chan tcell.Key, kill chan bool, gs gameState) {
+	// main event loop listening to keyboard events
+	for {
+
+		ev := gs.screen.PollEvent()
 		switch ev := ev.(type) {
 		case *tcell.EventResize:
-			s.Sync()
+			gs.screen.Sync()
 		case *tcell.EventKey:
 			if ev.Key() == tcell.KeyEscape || ev.Key() == tcell.KeyCtrlC {
-				return
+				kill <- true
 			}
 
 			if ev.Key() == tcell.KeyUp || ev.Key() == tcell.KeyDown {
-				movePaddle(gs, ev.Key())
+				ch <- ev.Key()
 			}
 		}
+	}
+}
 
-		drawLeftPaddle(gs)
-		drawRightPaddle(gs)
-
-		drawBall(gs.screen)
-		drawBorder(gs.screen)
-		gs.screen.Show()
+func runGame(gs gameState) {
+	for {
+		time.Sleep(100 * time.Millisecond)
+		gs.tick()
+		gs.moveBall()
+		drawBall(gs)
 	}
 }
 
@@ -150,8 +215,8 @@ func drawPaddle(p *coord, s tcell.Screen, x int) {
 	}
 }
 
-func drawBall(s tcell.Screen) {
+func drawBall(gs gameState) {
 	style := tcell.StyleDefault.Foreground(tcell.ColorWhite)
 
-	s.SetContent(55, 20, tcell.RuneDiamond, nil, style)
+	gs.screen.SetContent(gs.ball.x, gs.ball.y, tcell.RuneDiamond, nil, style)
 }
