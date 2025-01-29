@@ -8,6 +8,26 @@ import (
 	"github.com/gdamore/tcell"
 )
 
+type gameState struct {
+	screen      tcell.Screen
+	paddleCoord *coord
+}
+
+type coord struct {
+	yTop int
+	yBot int
+}
+
+func (c *coord) up() {
+	c.yBot -= 1
+	c.yTop -= 1
+}
+
+func (c *coord) down() {
+	c.yBot += 1
+	c.yTop += 1
+}
+
 func main() {
 	s, err := tcell.NewScreen()
 	if err != nil {
@@ -17,14 +37,17 @@ func main() {
 		log.Fatal(err)
 	}
 
+	gs := gameState{screen: s, paddleCoord: &coord{2, 5}}
+
 	s.Clear()
 	s.DisableMouse()
 
 	drawBorder(s)
 	// left
-	drawPaddle(s, 2)
+	drawLeftPaddle(gs)
+
 	// right
-	drawPaddle(s, 110)
+	drawRightPaddle(gs)
 
 	drawBall(s)
 
@@ -42,8 +65,8 @@ func main() {
 	defer quit()
 
 	for {
-		s.Show()
-		ev := s.PollEvent()
+		gs.screen.Clear()
+		ev := gs.screen.PollEvent()
 
 		switch ev := ev.(type) {
 		case *tcell.EventResize:
@@ -52,8 +75,29 @@ func main() {
 			if ev.Key() == tcell.KeyEscape || ev.Key() == tcell.KeyCtrlC {
 				return
 			}
+
+			if ev.Key() == tcell.KeyUp || ev.Key() == tcell.KeyDown {
+				movePaddle(gs, ev.Key())
+			}
 		}
+
+		drawLeftPaddle(gs)
+		drawRightPaddle(gs)
+
+		drawBall(gs.screen)
+		drawBorder(gs.screen)
+		gs.screen.Show()
 	}
+}
+
+func movePaddle(gs gameState, dir tcell.Key) {
+	if dir == tcell.KeyUp {
+		gs.paddleCoord.up()
+	} else {
+		gs.paddleCoord.down()
+	}
+
+	gs.screen.Show()
 }
 
 func drawBorder(s tcell.Screen) error {
@@ -88,13 +132,21 @@ func drawBorder(s tcell.Screen) error {
 	return nil
 }
 
-func drawPaddle(s tcell.Screen, x int) {
+func drawLeftPaddle(gs gameState) {
+	drawPaddle(gs, 2)
+}
+
+func drawRightPaddle(gs gameState) {
+	drawPaddle(gs, 110)
+}
+
+func drawPaddle(gs gameState, x int) {
 	// Left is x = 1, should start at y = 2, end at y = 6
 
 	style := tcell.StyleDefault.Foreground(tcell.ColorWhite)
-	s.SetContent(x, 2, tcell.RuneBlock, nil, style)
-	s.SetContent(x, 3, tcell.RuneBlock, nil, style)
-	s.SetContent(x, 4, tcell.RuneBlock, nil, style)
+	for i := gs.paddleCoord.yTop; i <= gs.paddleCoord.yBot; i++ {
+		gs.screen.SetContent(x, i, tcell.RuneBlock, nil, style)
+	}
 }
 
 func drawBall(s tcell.Screen) {
