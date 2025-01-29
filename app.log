@@ -1,0 +1,597 @@
+2025/01/29 23:54:54 Moving L at x=55 y=20
+2025/01/29 23:54:54 Set direction from L to L
+2025/01/29 23:54:54 Moving L at x=54 y=20
+2025/01/29 23:54:54 Set direction from L to L
+2025/01/29 23:54:54 Moving L at x=53 y=20
+2025/01/29 23:54:54 Set direction from L to L
+2025/01/29 23:54:55 Moving L at x=52 y=20
+2025/01/29 23:54:55 Set direction from L to L
+2025/01/29 23:54:55 Moving L at x=51 y=20
+2025/01/29 23:54:55 Set direction from L to L
+2025/01/29 23:54:55 Moving L at x=50 y=20
+2025/01/29 23:54:55 Set direction from L to L
+2025/01/29 23:54:55 Moving L at x=49 y=20
+2025/01/29 23:54:55 Set direction from L to L
+2025/01/29 23:54:55 Moving L at x=48 y=20
+2025/01/29 23:54:55 Set direction from L to L
+2025/01/29 23:54:55 Moving L at x=47 y=20
+2025/01/29 23:54:55 Set direction from L to L
+2025/01/29 23:54:55 Moving L at x=46 y=20
+2025/01/29 23:54:55 Set direction from L to L
+2025/01/29 23:54:55 Moving L at x=45 y=20
+2025/01/29 23:54:55 Set direction from L to L
+2025/01/29 23:54:55 Moving L at x=44 y=20
+2025/01/29 23:54:55 Set direction from L to L
+2025/01/29 23:54:55 Moving L at x=43 y=20
+2025/01/29 23:54:55 Set direction from L to L
+2025/01/29 23:54:56 Moving L at x=42 y=20
+2025/01/29 23:54:56 Set direction from L to L
+2025/01/29 23:54:56 Moving L at x=41 y=20
+2025/01/29 23:54:56 Set direction from L to L
+2025/01/29 23:54:56 Moving L at x=40 y=20
+2025/01/29 23:54:56 Set direction from L to L
+2025/01/29 23:54:56 Moving L at x=39 y=20
+2025/01/29 23:54:56 Set direction from L to L
+2025/01/29 23:54:56 Moving L at x=38 y=20
+2025/01/29 23:54:56 Set direction from L to L
+2025/01/29 23:54:56 Moving L at x=37 y=20
+2025/01/29 23:54:56 Set direction from L to L
+2025/01/29 23:54:56 Moving L at x=36 y=20
+2025/01/29 23:54:56 Set direction from L to L
+2025/01/29 23:54:56 Moving L at x=35 y=20
+2025/01/29 23:54:56 Set direction from L to L
+2025/01/29 23:54:56 Moving L at x=34 y=20
+2025/01/29 23:54:56 Set direction from L to L
+2025/01/29 23:54:56 Moving L at x=33 y=20
+2025/01/29 23:54:56 Set direction from L to L
+2025/01/29 23:54:57 Moving L at x=32 y=20
+2025/01/29 23:54:57 Set direction from L to L
+2025/01/29 23:54:57 Moving L at x=31 y=20
+2025/01/29 23:54:57 Set direction from L to L
+2025/01/29 23:54:57 Moving L at x=30 y=20
+2025/01/29 23:54:57 Set direction from L to L
+2025/01/29 23:54:57 Moving L at x=29 y=20
+2025/01/29 23:54:57 Set direction from L to L
+2025/01/29 23:54:57 Moving L at x=28 y=20
+2025/01/29 23:54:57 Set direction from L to L
+2025/01/29 23:54:57 Moving L at x=27 y=20
+2025/01/29 23:54:57 Calcing collision
+paddle: {17 20 2}
+ ball: {27 20 L}
+2025/01/29 23:54:57 Set direction from L to L
+2025/01/29 23:54:57 Moving L at x=26 y=20
+2025/01/29 23:54:57 Calcing collision
+paddle: {17 20 2}
+ ball: {26 20 L}
+2025/01/29 23:54:57 Set direction from L to L
+2025/01/29 23:54:57 Moving L at x=25 y=20
+2025/01/29 23:54:57 Calcing collision
+paddle: {17 20 2}
+ ball: {25 20 L}
+2025/01/29 23:54:57 Set direction from L to L
+2025/01/29 23:54:57 Moving L at x=24 y=20
+2025/01/29 23:54:57 Calcing collision
+paddle: {18 21 2}
+ ball: {24 20 L}
+2025/01/29 23:54:57 Set direction from L to L
+2025/01/29 23:54:57 Moving L at x=23 y=20
+2025/01/29 23:54:57 Calcing collision
+paddle: {18 21 2}
+ ball: {23 20 L}
+2025/01/29 23:54:57 Set direction from L to L
+2025/01/29 23:54:58 Moving L at x=22 y=20
+2025/01/29 23:54:58 Calcing collision
+paddle: {18 21 2}
+ ball: {22 20 L}
+2025/01/29 23:54:58 Set direction from L to L
+2025/01/29 23:54:58 Moving L at x=21 y=20
+2025/01/29 23:54:58 Calcing collision
+paddle: {18 21 2}
+ ball: {21 20 L}
+2025/01/29 23:54:58 Set direction from L to L
+2025/01/29 23:54:58 Moving L at x=20 y=20
+2025/01/29 23:54:58 Calcing collision
+paddle: {18 21 2}
+ ball: {20 20 L}
+2025/01/29 23:54:58 Set direction from L to L
+2025/01/29 23:54:58 Moving L at x=19 y=20
+2025/01/29 23:54:58 Calcing collision
+paddle: {18 21 2}
+ ball: {19 20 L}
+2025/01/29 23:54:58 Set direction from L to L
+2025/01/29 23:54:58 Moving L at x=18 y=20
+2025/01/29 23:54:58 Calcing collision
+paddle: {18 21 2}
+ ball: {18 20 L}
+2025/01/29 23:54:58 Set direction from L to L
+2025/01/29 23:54:58 Moving L at x=17 y=20
+2025/01/29 23:54:58 Calcing collision
+paddle: {18 21 2}
+ ball: {17 20 L}
+2025/01/29 23:54:58 Set direction from L to L
+2025/01/29 23:54:58 Moving L at x=16 y=20
+2025/01/29 23:54:58 Calcing collision
+paddle: {18 21 2}
+ ball: {16 20 L}
+2025/01/29 23:54:58 Set direction from L to L
+2025/01/29 23:54:58 Moving L at x=15 y=20
+2025/01/29 23:54:58 Calcing collision
+paddle: {18 21 2}
+ ball: {15 20 L}
+2025/01/29 23:54:58 Set direction from L to L
+2025/01/29 23:54:58 Moving L at x=14 y=20
+2025/01/29 23:54:58 Calcing collision
+paddle: {18 21 2}
+ ball: {14 20 L}
+2025/01/29 23:54:58 Set direction from L to L
+2025/01/29 23:54:58 Moving L at x=13 y=20
+2025/01/29 23:54:58 Calcing collision
+paddle: {18 21 2}
+ ball: {13 20 L}
+2025/01/29 23:54:58 Set direction from L to L
+2025/01/29 23:54:59 Moving L at x=12 y=20
+2025/01/29 23:54:59 Calcing collision
+paddle: {18 21 2}
+ ball: {12 20 L}
+2025/01/29 23:54:59 Set direction from L to L
+2025/01/29 23:54:59 Moving L at x=11 y=20
+2025/01/29 23:54:59 Calcing collision
+paddle: {18 21 2}
+ ball: {11 20 L}
+2025/01/29 23:54:59 Set direction from L to L
+2025/01/29 23:54:59 Moving L at x=10 y=20
+2025/01/29 23:54:59 Calcing collision
+paddle: {18 21 2}
+ ball: {10 20 L}
+2025/01/29 23:54:59 Set direction from L to L
+2025/01/29 23:54:59 Moving L at x=9 y=20
+2025/01/29 23:54:59 Calcing collision
+paddle: {18 21 2}
+ ball: {9 20 L}
+2025/01/29 23:54:59 Set direction from L to L
+2025/01/29 23:54:59 Moving L at x=8 y=20
+2025/01/29 23:54:59 Calcing collision
+paddle: {18 21 2}
+ ball: {8 20 L}
+2025/01/29 23:54:59 Set direction from L to L
+2025/01/29 23:54:59 Moving L at x=7 y=20
+2025/01/29 23:54:59 Calcing collision
+paddle: {18 21 2}
+ ball: {7 20 L}
+2025/01/29 23:54:59 Set direction from L to L
+2025/01/29 23:54:59 Moving L at x=6 y=20
+2025/01/29 23:54:59 Calcing collision
+paddle: {18 21 2}
+ ball: {6 20 L}
+2025/01/29 23:54:59 Set direction from L to L
+2025/01/29 23:54:59 Moving L at x=5 y=20
+2025/01/29 23:54:59 Calcing collision
+paddle: {18 21 2}
+ ball: {5 20 L}
+2025/01/29 23:54:59 Set direction from L to L
+2025/01/29 23:54:59 Moving L at x=4 y=20
+2025/01/29 23:54:59 Calcing collision
+paddle: {18 21 2}
+ ball: {4 20 L}
+2025/01/29 23:54:59 Set direction from L to L
+2025/01/29 23:55:00 Moving L at x=3 y=20
+2025/01/29 23:55:00 Calcing collision
+paddle: {18 21 2}
+ ball: {3 20 L}
+2025/01/29 23:55:00 Got a collision with DirectionL
+2025/01/29 23:55:00 Set direction from L to TR
+2025/01/29 23:55:00 Moving TR at x=4 y=19
+2025/01/29 23:55:00 Calcing collision
+paddle: {18 21 2}
+ ball: {4 19 TR}
+2025/01/29 23:55:00 Set direction from TR to TR
+2025/01/29 23:55:00 Moving TR at x=6 y=17
+2025/01/29 23:55:00 Set direction from TR to TR
+2025/01/29 23:55:00 Moving TR at x=8 y=15
+2025/01/29 23:55:00 Set direction from TR to TR
+2025/01/29 23:55:00 Moving TR at x=10 y=13
+2025/01/29 23:55:00 Set direction from TR to TR
+2025/01/29 23:55:00 Moving TR at x=12 y=11
+2025/01/29 23:55:00 Set direction from TR to TR
+2025/01/29 23:55:00 Moving TR at x=14 y=9
+2025/01/29 23:55:00 Set direction from TR to TR
+2025/01/29 23:55:00 Moving TR at x=16 y=7
+2025/01/29 23:55:00 Set direction from TR to TR
+2025/01/29 23:55:00 Moving TR at x=18 y=5
+2025/01/29 23:55:00 Calcing collision
+paddle: {2 5 110}
+ ball: {19 4 TR}
+2025/01/29 23:55:00 Set direction from TR to TR
+2025/01/29 23:55:00 Moving TR at x=20 y=3
+2025/01/29 23:55:00 Set direction from TR to BR
+2025/01/29 23:55:01 Moving BR at x=22 y=3
+2025/01/29 23:55:01 Calcing collision
+paddle: {2 5 110}
+ ball: {22 3 BR}
+2025/01/29 23:55:01 Set direction from BR to BR
+2025/01/29 23:55:01 Moving BR at x=23 y=4
+2025/01/29 23:55:01 Calcing collision
+paddle: {2 5 110}
+ ball: {23 4 BR}
+2025/01/29 23:55:01 Set direction from BR to BR
+2025/01/29 23:55:01 Moving BR at x=24 y=5
+2025/01/29 23:55:01 Calcing collision
+paddle: {2 5 110}
+ ball: {24 5 BR}
+2025/01/29 23:55:01 Set direction from BR to BR
+2025/01/29 23:55:01 Moving BR at x=25 y=6
+2025/01/29 23:55:01 Set direction from BR to BR
+2025/01/29 23:55:01 Moving BR at x=26 y=7
+2025/01/29 23:55:01 Set direction from BR to BR
+2025/01/29 23:55:01 Moving BR at x=27 y=8
+2025/01/29 23:55:01 Set direction from BR to BR
+2025/01/29 23:55:01 Moving BR at x=28 y=9
+2025/01/29 23:55:01 Set direction from BR to BR
+2025/01/29 23:55:01 Moving BR at x=29 y=10
+2025/01/29 23:55:01 Set direction from BR to BR
+2025/01/29 23:55:01 Moving BR at x=30 y=11
+2025/01/29 23:55:01 Set direction from BR to BR
+2025/01/29 23:55:01 Moving BR at x=31 y=12
+2025/01/29 23:55:01 Set direction from BR to BR
+2025/01/29 23:55:02 Moving BR at x=32 y=13
+2025/01/29 23:55:02 Set direction from BR to BR
+2025/01/29 23:55:02 Moving BR at x=33 y=14
+2025/01/29 23:55:02 Set direction from BR to BR
+2025/01/29 23:55:02 Moving BR at x=34 y=15
+2025/01/29 23:55:02 Set direction from BR to BR
+2025/01/29 23:55:02 Moving BR at x=35 y=16
+2025/01/29 23:55:02 Set direction from BR to BR
+2025/01/29 23:55:02 Moving BR at x=36 y=17
+2025/01/29 23:55:02 Set direction from BR to BR
+2025/01/29 23:55:02 Moving BR at x=37 y=18
+2025/01/29 23:55:02 Set direction from BR to BR
+2025/01/29 23:55:02 Moving BR at x=38 y=19
+2025/01/29 23:55:02 Set direction from BR to BR
+2025/01/29 23:55:02 Moving BR at x=39 y=20
+2025/01/29 23:55:02 Set direction from BR to BR
+2025/01/29 23:55:02 Moving BR at x=40 y=21
+2025/01/29 23:55:02 Set direction from BR to BR
+2025/01/29 23:55:02 Moving BR at x=41 y=22
+2025/01/29 23:55:02 Set direction from BR to BR
+2025/01/29 23:55:03 Moving BR at x=42 y=23
+2025/01/29 23:55:03 Set direction from BR to BR
+2025/01/29 23:55:03 Moving BR at x=43 y=24
+2025/01/29 23:55:03 Set direction from BR to BR
+2025/01/29 23:55:03 Moving BR at x=44 y=25
+2025/01/29 23:55:03 Set direction from BR to BR
+2025/01/29 23:55:03 Moving BR at x=45 y=26
+2025/01/29 23:55:03 Set direction from BR to BR
+2025/01/29 23:55:03 Moving BR at x=46 y=27
+2025/01/29 23:55:03 Set direction from BR to BR
+2025/01/29 23:55:03 Moving BR at x=47 y=28
+2025/01/29 23:55:03 Set direction from BR to BR
+2025/01/29 23:55:03 Moving BR at x=48 y=29
+2025/01/29 23:55:03 Set direction from BR to BR
+2025/01/29 23:55:03 Moving BR at x=49 y=30
+2025/01/29 23:55:03 Set direction from BR to BR
+2025/01/29 23:55:03 Moving BR at x=50 y=31
+2025/01/29 23:55:03 Set direction from BR to BR
+2025/01/29 23:55:03 Moving BR at x=51 y=32
+2025/01/29 23:55:03 Set direction from BR to BR
+2025/01/29 23:55:04 Moving BR at x=52 y=33
+2025/01/29 23:55:04 Set direction from BR to BR
+2025/01/29 23:55:04 Moving BR at x=53 y=34
+2025/01/29 23:55:04 Set direction from BR to BR
+2025/01/29 23:55:04 Moving BR at x=54 y=35
+2025/01/29 23:55:04 Set direction from BR to BR
+2025/01/29 23:55:04 Moving BR at x=55 y=36
+2025/01/29 23:55:04 Set direction from BR to BR
+2025/01/29 23:55:04 Moving BR at x=56 y=37
+2025/01/29 23:55:04 Set direction from BR to BR
+2025/01/29 23:55:04 Moving BR at x=57 y=38
+2025/01/29 23:55:04 Set direction from BR to BR
+2025/01/29 23:55:04 Moving BR at x=58 y=39
+2025/01/29 23:55:04 Set direction from BR to BR
+2025/01/29 23:55:04 Moving BR at x=59 y=40
+2025/01/29 23:55:04 Set direction from BR to 
+2025/01/29 23:55:04 Moving  at x=2 y=2
+2025/01/29 23:55:04 Set direction from  to 
+2025/01/29 23:55:04 Moving  at x=2 y=2
+2025/01/29 23:55:04 Set direction from  to 
+2025/01/29 23:55:05 Moving  at x=2 y=2
+2025/01/29 23:55:05 Set direction from  to 
+2025/01/29 23:55:05 Moving  at x=2 y=2
+2025/01/29 23:55:05 Set direction from  to 
+2025/01/29 23:55:05 Moving  at x=2 y=2
+2025/01/29 23:55:05 Set direction from  to 
+2025/01/29 23:55:05 Moving  at x=2 y=2
+2025/01/29 23:55:05 Set direction from  to 
+2025/01/29 23:55:05 Moving  at x=2 y=2
+2025/01/29 23:55:05 Set direction from  to 
+2025/01/29 23:55:05 Moving  at x=2 y=2
+2025/01/29 23:55:05 Set direction from  to 
+2025/01/29 23:55:05 Moving  at x=2 y=2
+2025/01/29 23:55:05 Set direction from  to 
+2025/01/29 23:55:05 Moving  at x=2 y=2
+2025/01/29 23:55:05 Set direction from  to 
+2025/01/29 23:55:05 Moving  at x=2 y=2
+2025/01/29 23:55:05 Set direction from  to 
+2025/01/29 23:56:27 Set direction from L to L
+2025/01/29 23:56:27 Set direction from L to L
+2025/01/29 23:56:28 Set direction from L to L
+2025/01/29 23:56:28 Set direction from L to L
+2025/01/29 23:56:28 Set direction from L to L
+2025/01/29 23:56:28 Set direction from L to L
+2025/01/29 23:56:28 Set direction from L to L
+2025/01/29 23:56:28 Set direction from L to L
+2025/01/29 23:56:28 Set direction from L to L
+2025/01/29 23:56:28 Set direction from L to L
+2025/01/29 23:56:28 Set direction from L to L
+2025/01/29 23:56:28 Set direction from L to L
+2025/01/29 23:56:29 Set direction from L to L
+2025/01/29 23:56:29 Set direction from L to L
+2025/01/29 23:56:29 Set direction from L to L
+2025/01/29 23:56:29 Set direction from L to L
+2025/01/29 23:56:29 Set direction from L to L
+2025/01/29 23:56:29 Set direction from L to L
+2025/01/29 23:56:29 Set direction from L to L
+2025/01/29 23:56:29 Set direction from L to L
+2025/01/29 23:56:29 Calcing collision
+paddle: {17 20 2}
+ ball: {35 20 L}
+2025/01/29 23:56:29 Set direction from L to L
+2025/01/29 23:56:29 Calcing collision
+paddle: {17 20 2}
+ ball: {34 20 L}
+2025/01/29 23:56:29 Set direction from L to L
+2025/01/29 23:56:30 Calcing collision
+paddle: {17 20 2}
+ ball: {33 20 L}
+2025/01/29 23:56:30 Set direction from L to L
+2025/01/29 23:56:30 Calcing collision
+paddle: {17 20 2}
+ ball: {32 20 L}
+2025/01/29 23:56:30 Set direction from L to L
+2025/01/29 23:56:30 Calcing collision
+paddle: {17 20 2}
+ ball: {31 20 L}
+2025/01/29 23:56:30 Set direction from L to L
+2025/01/29 23:56:30 Calcing collision
+paddle: {17 20 2}
+ ball: {30 20 L}
+2025/01/29 23:56:30 Set direction from L to L
+2025/01/29 23:56:30 Calcing collision
+paddle: {17 20 2}
+ ball: {29 20 L}
+2025/01/29 23:56:30 Set direction from L to L
+2025/01/29 23:56:30 Calcing collision
+paddle: {18 21 2}
+ ball: {28 20 L}
+2025/01/29 23:56:30 Set direction from L to L
+2025/01/29 23:56:30 Calcing collision
+paddle: {18 21 2}
+ ball: {27 20 L}
+2025/01/29 23:56:30 Set direction from L to L
+2025/01/29 23:56:30 Calcing collision
+paddle: {18 21 2}
+ ball: {26 20 L}
+2025/01/29 23:56:30 Set direction from L to L
+2025/01/29 23:56:30 Calcing collision
+paddle: {18 21 2}
+ ball: {25 20 L}
+2025/01/29 23:56:30 Set direction from L to L
+2025/01/29 23:56:30 Calcing collision
+paddle: {18 21 2}
+ ball: {24 20 L}
+2025/01/29 23:56:30 Set direction from L to L
+2025/01/29 23:56:31 Calcing collision
+paddle: {18 21 2}
+ ball: {23 20 L}
+2025/01/29 23:56:31 Set direction from L to L
+2025/01/29 23:56:31 Calcing collision
+paddle: {18 21 2}
+ ball: {22 20 L}
+2025/01/29 23:56:31 Set direction from L to L
+2025/01/29 23:56:31 Calcing collision
+paddle: {18 21 2}
+ ball: {21 20 L}
+2025/01/29 23:56:31 Set direction from L to L
+2025/01/29 23:56:31 Calcing collision
+paddle: {18 21 2}
+ ball: {20 20 L}
+2025/01/29 23:56:31 Set direction from L to L
+2025/01/29 23:56:31 Calcing collision
+paddle: {18 21 2}
+ ball: {19 20 L}
+2025/01/29 23:56:31 Set direction from L to L
+2025/01/29 23:56:31 Calcing collision
+paddle: {18 21 2}
+ ball: {18 20 L}
+2025/01/29 23:56:31 Set direction from L to L
+2025/01/29 23:56:31 Calcing collision
+paddle: {19 22 2}
+ ball: {17 20 L}
+2025/01/29 23:56:31 Set direction from L to L
+2025/01/29 23:56:31 Calcing collision
+paddle: {19 22 2}
+ ball: {16 20 L}
+2025/01/29 23:56:31 Set direction from L to L
+2025/01/29 23:56:31 Calcing collision
+paddle: {19 22 2}
+ ball: {15 20 L}
+2025/01/29 23:56:31 Set direction from L to L
+2025/01/29 23:56:31 Calcing collision
+paddle: {19 22 2}
+ ball: {14 20 L}
+2025/01/29 23:56:31 Set direction from L to L
+2025/01/29 23:56:32 Calcing collision
+paddle: {19 22 2}
+ ball: {13 20 L}
+2025/01/29 23:56:32 Set direction from L to L
+2025/01/29 23:56:32 Calcing collision
+paddle: {19 22 2}
+ ball: {12 20 L}
+2025/01/29 23:56:32 Set direction from L to L
+2025/01/29 23:56:32 Calcing collision
+paddle: {19 22 2}
+ ball: {11 20 L}
+2025/01/29 23:56:32 Set direction from L to L
+2025/01/29 23:56:32 Calcing collision
+paddle: {19 22 2}
+ ball: {10 20 L}
+2025/01/29 23:56:32 Set direction from L to L
+2025/01/29 23:56:32 Calcing collision
+paddle: {19 22 2}
+ ball: {9 20 L}
+2025/01/29 23:56:32 Set direction from L to L
+2025/01/29 23:56:32 Calcing collision
+paddle: {19 22 2}
+ ball: {8 20 L}
+2025/01/29 23:56:32 Set direction from L to L
+2025/01/29 23:56:32 Calcing collision
+paddle: {19 22 2}
+ ball: {7 20 L}
+2025/01/29 23:56:32 Set direction from L to L
+2025/01/29 23:56:32 Calcing collision
+paddle: {19 22 2}
+ ball: {6 20 L}
+2025/01/29 23:56:32 Set direction from L to L
+2025/01/29 23:56:32 Calcing collision
+paddle: {19 22 2}
+ ball: {5 20 L}
+2025/01/29 23:56:32 Set direction from L to L
+2025/01/29 23:56:32 Calcing collision
+paddle: {19 22 2}
+ ball: {4 20 L}
+2025/01/29 23:56:32 Set direction from L to L
+2025/01/29 23:56:33 Calcing collision
+paddle: {19 22 2}
+ ball: {3 20 L}
+2025/01/29 23:56:33 Set direction from L to TR
+2025/01/29 23:56:33 Calcing collision
+paddle: {19 22 2}
+ ball: {4 19 TR}
+2025/01/29 23:56:33 Set direction from TR to TR
+2025/01/29 23:56:33 Set direction from TR to TR
+2025/01/29 23:56:33 Set direction from TR to TR
+2025/01/29 23:56:33 Set direction from TR to TR
+2025/01/29 23:56:33 Set direction from TR to TR
+2025/01/29 23:56:33 Set direction from TR to TR
+2025/01/29 23:56:33 Set direction from TR to TR
+2025/01/29 23:56:33 Calcing collision
+paddle: {2 5 110}
+ ball: {19 4 TR}
+2025/01/29 23:56:33 Set direction from TR to TR
+2025/01/29 23:56:33 Set direction from TR to BR
+2025/01/29 23:56:34 Calcing collision
+paddle: {2 5 110}
+ ball: {22 3 BR}
+2025/01/29 23:56:34 Set direction from BR to BR
+2025/01/29 23:56:34 Calcing collision
+paddle: {2 5 110}
+ ball: {23 4 BR}
+2025/01/29 23:56:34 Set direction from BR to BR
+2025/01/29 23:56:34 Calcing collision
+paddle: {2 5 110}
+ ball: {24 5 BR}
+2025/01/29 23:56:34 Set direction from BR to BR
+2025/01/29 23:56:34 Set direction from BR to BR
+2025/01/29 23:56:34 Set direction from BR to BR
+2025/01/29 23:56:34 Set direction from BR to BR
+2025/01/29 23:56:34 Set direction from BR to BR
+2025/01/29 23:56:34 Set direction from BR to BR
+2025/01/29 23:56:34 Set direction from BR to BR
+2025/01/29 23:56:34 Set direction from BR to BR
+2025/01/29 23:56:35 Set direction from BR to BR
+2025/01/29 23:56:35 Set direction from BR to BR
+2025/01/29 23:56:35 Set direction from BR to BR
+2025/01/29 23:56:35 Set direction from BR to BR
+2025/01/29 23:56:35 Set direction from BR to BR
+2025/01/29 23:56:35 Set direction from BR to BR
+2025/01/29 23:56:35 Set direction from BR to BR
+2025/01/29 23:56:35 Set direction from BR to BR
+2025/01/29 23:56:35 Set direction from BR to BR
+2025/01/29 23:56:35 Set direction from BR to BR
+2025/01/29 23:56:36 Set direction from BR to BR
+2025/01/29 23:56:36 Set direction from BR to BR
+2025/01/29 23:56:36 Set direction from BR to BR
+2025/01/29 23:56:36 Set direction from BR to BR
+2025/01/29 23:56:36 Set direction from BR to BR
+2025/01/29 23:56:36 Set direction from BR to BR
+2025/01/29 23:56:36 Set direction from BR to BR
+2025/01/29 23:56:36 Set direction from BR to BR
+2025/01/29 23:56:36 Set direction from BR to BR
+2025/01/29 23:56:36 Set direction from BR to BR
+2025/01/29 23:56:37 Set direction from BR to BR
+2025/01/29 23:56:37 Set direction from BR to BR
+2025/01/29 23:56:37 Set direction from BR to BR
+2025/01/29 23:56:37 Set direction from BR to BR
+2025/01/29 23:56:37 Set direction from BR to BR
+2025/01/29 23:56:37 Set direction from BR to BR
+2025/01/29 23:56:37 Set direction from BR to BR
+2025/01/29 23:56:37 Set direction from BR to TR
+2025/01/29 23:56:37 Set direction from TR to TR
+2025/01/29 23:56:38 Set direction from TR to TR
+2025/01/29 23:56:38 Set direction from TR to TR
+2025/01/29 23:56:38 Set direction from TR to TR
+2025/01/29 23:56:38 Set direction from TR to TR
+2025/01/29 23:56:38 Set direction from TR to TR
+2025/01/29 23:56:38 Set direction from TR to TR
+2025/01/29 23:56:38 Set direction from TR to TR
+2025/01/29 23:56:38 Set direction from TR to TR
+2025/01/29 23:56:38 Calcing collision
+paddle: {19 22 2}
+ ball: {78 21 TR}
+2025/01/29 23:56:38 Set direction from TR to TR
+2025/01/29 23:56:38 Calcing collision
+paddle: {19 22 2}
+ ball: {80 19 TR}
+2025/01/29 23:56:38 Set direction from TR to TR
+2025/01/29 23:56:39 Set direction from TR to TR
+2025/01/29 23:56:39 Set direction from TR to TR
+2025/01/29 23:56:39 Set direction from TR to TR
+2025/01/29 23:56:39 Set direction from TR to TR
+2025/01/29 23:56:39 Set direction from TR to TR
+2025/01/29 23:56:39 Set direction from TR to TR
+2025/01/29 23:56:39 Calcing collision
+paddle: {2 5 110}
+ ball: {95 4 TR}
+2025/01/29 23:56:39 Set direction from TR to TR
+2025/01/29 23:56:39 Set direction from TR to BR
+2025/01/29 23:56:39 Calcing collision
+paddle: {2 5 110}
+ ball: {98 3 BR}
+2025/01/29 23:56:39 Set direction from BR to BR
+2025/01/29 23:56:39 Calcing collision
+paddle: {2 5 110}
+ ball: {99 4 BR}
+2025/01/29 23:56:39 Set direction from BR to BR
+2025/01/29 23:56:40 Calcing collision
+paddle: {2 5 110}
+ ball: {100 5 BR}
+2025/01/29 23:56:40 Set direction from BR to BR
+2025/01/29 23:56:40 Set direction from BR to BR
+2025/01/29 23:56:40 Set direction from BR to BR
+2025/01/29 23:56:40 Set direction from BR to BR
+2025/01/29 23:56:40 Set direction from BR to BR
+2025/01/29 23:56:40 Set direction from BR to BR
+2025/01/29 23:56:40 Set direction from BR to BR
+2025/01/29 23:56:40 Set direction from BR to BR
+2025/01/29 23:56:40 Set direction from BR to BR
+2025/01/29 23:56:40 Set direction from BR to BR
+2025/01/29 23:56:41 Set direction from BR to BR
+2025/01/29 23:56:41 Set direction from BR to BR
+2025/01/29 23:56:41 Set direction from BR to BR
+2025/01/29 23:56:41 Set direction from BR to BR
+2025/01/29 23:56:41 Set direction from BR to BR
+2025/01/29 23:56:41 Set direction from BR to BR
+2025/01/29 23:56:41 Set direction from BR to BR
+2025/01/29 23:56:41 Set direction from BR to BR
+2025/01/29 23:56:41 Set direction from BR to BR
+2025/01/29 23:56:41 Set direction from BR to BR
+2025/01/29 23:56:42 Set direction from BR to BR
+2025/01/29 23:56:42 Set direction from BR to BR
+2025/01/29 23:56:42 Set direction from BR to BR
+2025/01/29 23:56:42 Set direction from BR to BR
+2025/01/29 23:56:42 Set direction from BR to BR
+2025/01/29 23:56:42 Set direction from BR to BR
+2025/01/29 23:56:42 Set direction from BR to BR
+2025/01/29 23:56:42 Set direction from BR to BR
+2025/01/29 23:56:42 Set direction from BR to BR
+2025/01/29 23:56:42 Set direction from BR to BR
+2025/01/29 23:56:43 Set direction from BR to BR

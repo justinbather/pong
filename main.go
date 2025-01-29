@@ -3,11 +3,14 @@ package main
 import (
 	"errors"
 	"log"
+	"math"
 	"os"
 	"time"
 
 	"github.com/gdamore/tcell"
 )
+
+const TICK_RATE = 100
 
 type gameState struct {
 	screen tcell.Screen
@@ -18,24 +21,54 @@ type gameState struct {
 }
 
 func (gs *gameState) moveBall() {
-	if gs.ball.dir == "L" {
-		// collision
-		if gs.ball.x == 3 {
-			gs.ball.x += 1
-			gs.ball.dir = "R"
+	dir := gs.ball.dir
+
+	if dir == "L" || dir == "TL" || dir == "TR" {
+		collision, newDir := calculateCollision(*gs.ball, *gs.p1)
+		if collision {
+			gs.ball.dir = newDir
 		} else {
-			gs.ball.x -= 1
+			gs.ball.dir = dir
 		}
+
+		x, y := calcCoord(*gs.ball)
+		gs.ball.x = x
+		gs.ball.y = y
 	}
 
-	if gs.ball.dir == "R" {
-		// collision
-		if gs.ball.x == 109 {
-			gs.ball.x -= 1
-			gs.ball.dir = "L"
+	// collision
+	if dir == "R" || dir == "TR" || dir == "BR" {
+		collision, newDir := calculateCollision(*gs.ball, *gs.p2)
+		if collision {
+			gs.ball.dir = newDir
 		} else {
-			gs.ball.x += 1
+			gs.ball.dir = dir
 		}
+
+		x, y := calcCoord(*gs.ball)
+		gs.ball.x = x
+		gs.ball.y = y
+	}
+
+	log.Printf("Set direction from %s to %s", dir, gs.ball.dir)
+}
+
+func calcCoord(ball ball) (int, int) {
+	switch ball.dir {
+	case "L":
+		return ball.x - 1, ball.y
+	case "R":
+		return ball.x, ball.y + 1
+	case "TL":
+		return ball.y - 1, ball.y - 1
+	case "TR":
+		return ball.x + 1, ball.y - 1
+	case "BL":
+		return ball.x - 1, ball.y + 1
+	case "BR":
+		return ball.x + 1, ball.y + 1
+	default:
+		return 2, 2
 	}
 }
 
@@ -48,6 +81,7 @@ type ball struct {
 type coord struct {
 	yTop int
 	yBot int
+	x    int
 }
 
 func (c *coord) up() {
@@ -61,6 +95,14 @@ func (c *coord) down() {
 }
 
 func main() {
+	logFile, err := os.OpenFile("app.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatalf("Failed to open log file: %v", err)
+	}
+	defer logFile.Close()
+
+	// Set output of logs to file
+	log.SetOutput(logFile)
 	s, err := tcell.NewScreen()
 	if err != nil {
 		log.Fatal(err)
@@ -69,7 +111,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	gs := gameState{screen: s, p1: &coord{2, 5}, p2: &coord{2, 5}, ball: &ball{55, 20, "L"}, ticks: 0}
+	gs := gameState{screen: s, p1: &coord{2, 5, 2}, p2: &coord{2, 5, 110}, ball: &ball{55, 20, "L"}, ticks: 0}
 
 	s.Clear()
 	s.DisableMouse()
@@ -105,7 +147,7 @@ func main() {
 	go func() {
 		ticknum := 0
 		for {
-			time.Sleep(time.Millisecond * 50)
+			time.Sleep(time.Millisecond * TICK_RATE)
 			tick <- ticknum
 			ticknum++
 		}
@@ -157,6 +199,115 @@ func keyboardEventLoop(ch chan tcell.Key, kill chan bool, gs gameState) {
 	}
 }
 
+// returns string direction
+// "L" left, "R" - right, "TL" top-left, "TR" top-right, "BL" bottom-left, "RL" right-left
+func calculateCollision(ball ball, paddle coord) (bool, string) {
+	// collided with top or bottom, reflect
+	if ball.y == 2 || ball.y == 40 {
+		return true, getOpposite(ball.dir)
+	}
+
+	// collision on paddle
+	//left paddle
+	if ball.y <= paddle.yBot && ball.y >= paddle.yTop {
+		log.Printf("Calcing collision\npaddle: %v\n ball: %v\n", paddle, ball)
+		if ball.x == paddle.x+1 {
+			ball.dir = calcPaddleCollision(paddle, ball, "L")
+			return true, ball.dir
+		} else if ball.x == paddle.x-1 {
+			ball.dir = calcPaddleCollision(paddle, ball, "R")
+			return true, ball.dir
+		}
+
+	}
+	return false, ""
+}
+
+func calcPaddleCollision(paddle coord, ball ball, side string) string {
+	mid := math.Round(float64(paddle.yBot-paddle.yTop) / 2)
+	if ball.y == int(mid) {
+		if side == "L" {
+			return "R"
+		}
+		if side == "R" {
+			return "L"
+		}
+	}
+
+	if ball.y > int(mid) {
+		opp := oppositeAngle(ball.dir)
+		if opp == "" {
+			opp = oppositeNonAngle(ball.dir, "T")
+		}
+		return opp
+	} else {
+		if ball.y < int(mid) {
+			opp := oppositeAngle(ball.dir)
+			if opp == "" {
+				opp = oppositeNonAngle(ball.dir, "B")
+			}
+			return opp
+		}
+	}
+
+	return ""
+}
+
+func oppositeNonAngle(dir string, y string) string {
+	switch dir {
+	case "L":
+		if y == "T" {
+			return "TR"
+		} else {
+			return "BR"
+		}
+	default:
+		if y == "T" {
+			return "TL"
+		} else {
+			return "BL"
+		}
+	}
+}
+
+func oppositeAngle(dir string) string {
+	switch dir {
+
+	case "TL":
+		return "TR"
+	case "TR":
+		return "TL"
+	case "BR":
+		return "BL"
+	case "BL":
+		return "BR"
+
+	default:
+		return ""
+
+	}
+}
+
+func getOpposite(dir string) string {
+	switch dir {
+	case "L":
+		return "R"
+	case "R":
+		return "L"
+	case "TL":
+		return "BL"
+	case "TR":
+		return "BR"
+	case "BR":
+		return "TR"
+	case "BL":
+		return "TL"
+
+	default:
+		return ""
+	}
+}
+
 func movePaddle(gs gameState, dir tcell.Key) {
 	if dir == tcell.KeyUp {
 		gs.p1.up()
@@ -200,20 +351,20 @@ func drawBorder(s tcell.Screen) error {
 }
 
 func drawLeftPaddle(gs gameState) {
-	drawPaddle(gs.p1, gs.screen, 2)
+	drawPaddle(gs.p1, gs.screen)
 }
 
 // "AI" matches the balls y value for now
 func drawRightPaddle(gs gameState) {
-	drawPaddle(&coord{gs.ball.y - 2, gs.ball.y + 1}, gs.screen, 110)
+	drawPaddle(&coord{gs.ball.y - 2, gs.ball.y + 1, 110}, gs.screen)
 }
 
-func drawPaddle(p *coord, s tcell.Screen, x int) {
+func drawPaddle(p *coord, s tcell.Screen) {
 	// Left is x = 1, should start at y = 2, end at y = 6
 
 	style := tcell.StyleDefault.Foreground(tcell.ColorWhite)
 	for i := p.yTop; i <= p.yBot; i++ {
-		s.SetContent(x, i, tcell.RuneBlock, nil, style)
+		s.SetContent(p.x, i, tcell.RuneBlock, nil, style)
 	}
 }
 
