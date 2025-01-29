@@ -26,12 +26,31 @@ func (gs *gameState) tick() {
 }
 
 func (gs *gameState) moveBall() {
-	gs.ball.x -= 1
+	if gs.ball.dir == "L" {
+		// collision
+		if gs.ball.x == 3 {
+			gs.ball.x += 1
+			gs.ball.dir = "R"
+		} else {
+			gs.ball.x -= 1
+		}
+	}
+
+	if gs.ball.dir == "R" {
+		// collision
+		if gs.ball.x == 109 {
+			gs.ball.x -= 1
+			gs.ball.dir = "L"
+		} else {
+			gs.ball.x += 1
+		}
+	}
 }
 
 type ball struct {
-	x int
-	y int
+	x   int
+	y   int
+	dir string
 }
 
 type coord struct {
@@ -58,7 +77,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	gs := gameState{screen: s, p1: &coord{2, 5}, p2: &coord{2, 5}, ball: &ball{55, 20}, ticks: 0}
+	gs := gameState{screen: s, p1: &coord{2, 5}, p2: &coord{2, 5}, ball: &ball{55, 20, "L"}, ticks: 0}
 
 	s.Clear()
 	s.DisableMouse()
