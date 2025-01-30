@@ -23,7 +23,7 @@ type gameState struct {
 func (gs *gameState) moveBall() {
 	dir := gs.ball.dir
 
-	if dir == "L" || dir == "TL" || dir == "TR" {
+	if dir == "L" || dir == "TL" || dir == "BL" {
 		collision, newDir := calculateCollision(*gs.ball, *gs.p1)
 		if collision {
 			gs.ball.dir = newDir
@@ -50,7 +50,7 @@ func (gs *gameState) moveBall() {
 		gs.ball.y = y
 	}
 
-	log.Printf("Set direction from %s to %s", dir, gs.ball.dir)
+	log.Printf("Set direction from %s to %s at x: %d y: %d", dir, gs.ball.dir, gs.ball.x, gs.ball.y)
 }
 
 func calcCoord(ball ball) (int, int) {
@@ -209,7 +209,8 @@ func calculateCollision(ball ball, paddle coord) (bool, string) {
 
 	// collision on paddle
 	//left paddle
-	if ball.y <= paddle.yBot && ball.y >= paddle.yTop {
+	log.Printf("paddle: x: %d, top: %d, bott: %d", paddle.x, paddle.yTop, paddle.yBot)
+	if (ball.y <= paddle.yBot && ball.y >= paddle.yTop) && (ball.x == paddle.x+1 || ball.x == paddle.x-1) {
 		log.Printf("Calcing collision\npaddle: %v\n ball: %v\n", paddle, ball)
 		if ball.x == paddle.x+1 {
 			ball.dir = calcPaddleCollision(paddle, ball, "L")
@@ -224,6 +225,7 @@ func calculateCollision(ball ball, paddle coord) (bool, string) {
 }
 
 func calcPaddleCollision(paddle coord, ball ball, side string) string {
+	log.Printf("calculating paddle coll. \n\tpaddle: %+v\n\tball: %+v\n\tside: %s\n", paddle, ball, side)
 	mid := math.Round(float64(paddle.yBot-paddle.yTop) / 2)
 	if ball.y == int(mid) {
 		if side == "L" {
@@ -357,6 +359,8 @@ func drawLeftPaddle(gs gameState) {
 // "AI" matches the balls y value for now
 func drawRightPaddle(gs gameState) {
 	drawPaddle(&coord{gs.ball.y - 2, gs.ball.y + 1, 110}, gs.screen)
+	gs.p2.yTop = gs.ball.y - 2
+	gs.p2.yBot = gs.ball.y + 1
 }
 
 func drawPaddle(p *coord, s tcell.Screen) {
