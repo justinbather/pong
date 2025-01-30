@@ -60,7 +60,7 @@ func calcCoord(ball ball) (int, int) {
 	case "R":
 		return ball.x, ball.y + 1
 	case "TL":
-		return ball.y - 1, ball.y - 1
+		return ball.x - 1, ball.y - 1
 	case "TR":
 		return ball.x + 1, ball.y - 1
 	case "BL":
