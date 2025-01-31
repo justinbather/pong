@@ -4,13 +4,78 @@ import (
 	"errors"
 	"log"
 	"math"
+	"math/rand"
 	"os"
 	"time"
 
 	"github.com/gdamore/tcell"
 )
 
-const TICK_RATE = 100
+// how many ticks for ball to move
+const TICK_RATE = 75
+
+// how many ticks for countdown lock to be unlocked
+const LOCK = 10
+
+type dir int
+
+const (
+	_ dir = iota
+	UP
+	DOWN
+	LEFT
+	RIGHT
+	UP_RIGHT
+	DOWN_RIGHT
+	UP_LEFT
+	DOWN_LEFT
+)
+
+func (d dir) String() string {
+	switch d {
+	case UP:
+		return "UP"
+	case DOWN:
+		return "DOWN"
+	case LEFT:
+		return "LEFT"
+	case RIGHT:
+		return "RIGHT"
+	case UP_RIGHT:
+		return "UP_RIGHT"
+	case DOWN_RIGHT:
+		return "DOWN_RIGHT"
+	case UP_LEFT:
+		return "UP_LEFT"
+	case DOWN_LEFT:
+		return "DOWN_LEFT"
+	default:
+		return "UNKNOWN"
+	}
+}
+
+func Dir(s int) dir {
+	switch s {
+	case 1:
+		return UP
+	case 2:
+		return DOWN
+	case 3:
+		return LEFT
+	case 4:
+		return RIGHT
+	case 5:
+		return UP_RIGHT
+	case 6:
+		return DOWN_RIGHT
+	case 7:
+		return UP_LEFT
+	case 8:
+		return DOWN_LEFT
+	default:
+		return 0
+	}
+}
 
 type gameState struct {
 	screen tcell.Screen
@@ -21,61 +86,85 @@ type gameState struct {
 }
 
 func (gs *gameState) moveBall() {
-	dir := gs.ball.dir
+	var paddle *coord
+	origDir := gs.ball.dir
 
-	if dir == "L" || dir == "TL" || dir == "BL" {
-		collision, newDir := calculateCollision(*gs.ball, *gs.p1)
-		if collision {
-			gs.ball.dir = newDir
-		} else {
-			gs.ball.dir = dir
-		}
-
-		x, y := calcCoord(*gs.ball)
-		gs.ball.x = x
-		gs.ball.y = y
+	switch getGeneralDirection(gs.ball.dir) {
+	case LEFT:
+		paddle = gs.p1
+	default:
+		paddle = gs.p2
 	}
 
-	// collision
-	if dir == "R" || dir == "TR" || dir == "BR" {
-		collision, newDir := calculateCollision(*gs.ball, *gs.p2)
-		if collision {
-			gs.ball.dir = newDir
-		} else {
-			gs.ball.dir = dir
-		}
-
-		x, y := calcCoord(*gs.ball)
-		gs.ball.x = x
-		gs.ball.y = y
+	coll, newDir := calculateCollision(*gs.ball, *paddle)
+	if coll {
+		gs.ball.dir = newDir
 	}
 
-	log.Printf("Set direction from %s to %s at x: %d y: %d", dir, gs.ball.dir, gs.ball.x, gs.ball.y)
+	x, y := gs.ball.next()
+	gs.ball.x = x
+	gs.ball.y = y
+
+	if x < 2 || x > 110 {
+		gs.reset()
+	}
+
+	log.Printf("Set direction from %s to %s at x: %d y: %d", origDir, gs.ball.dir, gs.ball.x, gs.ball.y)
 }
 
-func calcCoord(ball ball) (int, int) {
-	switch ball.dir {
-	case "L":
-		return ball.x - 1, ball.y
-	case "R":
-		return ball.x, ball.y + 1
-	case "TL":
-		return ball.x - 1, ball.y - 1
-	case "TR":
-		return ball.x + 1, ball.y - 1
-	case "BL":
-		return ball.x - 1, ball.y + 1
-	case "BR":
-		return ball.x + 1, ball.y + 1
+func (gs *gameState) reset() {
+	gs.ball = &ball{55, 20, randomDirection(), LOCK}
+
+}
+
+func getGeneralDirection(dir dir) dir {
+	switch dir {
+	case LEFT, UP_LEFT, DOWN_LEFT:
+		return LEFT
 	default:
+		return RIGHT
+	}
+}
+
+func (b *ball) next() (int, int) {
+	switch b.dir {
+	case LEFT:
+		return b.x - 1, b.y
+	case RIGHT:
+		return b.x, b.y + 1
+	case UP_LEFT:
+		return b.x - 1, b.y - 1
+	case UP_RIGHT:
+		return b.x + 1, b.y - 1
+	case DOWN_LEFT:
+		return b.x - 1, b.y + 1
+	case DOWN_RIGHT:
+		return b.x + 1, b.y + 1
+	default:
+		log.Printf("Direction was %s when getting next ball coord", b.dir)
 		return 2, 2
 	}
 }
 
 type ball struct {
-	x   int
-	y   int
-	dir string
+	x    int
+	y    int
+	dir  dir
+	lock int
+}
+
+func (b *ball) locked() bool {
+	if b.lock > 0 {
+		return true
+	}
+
+	return false
+}
+
+func (b *ball) countdown() {
+	if b.lock > 0 {
+		b.lock -= 1
+	}
 }
 
 type coord struct {
@@ -94,15 +183,32 @@ func (c *coord) down() {
 	c.yTop += 1
 }
 
+func initGame(gs gameState) {
+	gs.screen.Clear()
+	gs.screen.DisableMouse()
+
+	drawBorder(gs.screen)
+	drawLeftPaddle(gs)
+	drawRightPaddle(gs)
+	drawBall(gs)
+}
+
+func randomDirection() dir {
+	randy := rand.Intn(8) + 1
+	if randy == 0 {
+		randy = 1
+	}
+	return Dir(randy)
+}
+
 func main() {
 	logFile, err := os.OpenFile("app.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	if err != nil {
 		log.Fatalf("Failed to open log file: %v", err)
 	}
 	defer logFile.Close()
-
-	// Set output of logs to file
 	log.SetOutput(logFile)
+
 	s, err := tcell.NewScreen()
 	if err != nil {
 		log.Fatal(err)
@@ -111,19 +217,9 @@ func main() {
 		log.Fatal(err)
 	}
 
-	gs := gameState{screen: s, p1: &coord{2, 5, 2}, p2: &coord{2, 5, 110}, ball: &ball{55, 20, "L"}, ticks: 0}
+	gs := gameState{screen: s, p1: &coord{2, 5, 2}, p2: &coord{2, 5, 110}, ball: &ball{55, 20, randomDirection(), 0}, ticks: 0}
 
-	s.Clear()
-	s.DisableMouse()
-
-	drawBorder(s)
-	// left
-	drawLeftPaddle(gs)
-
-	// right
-	drawRightPaddle(gs)
-
-	drawBall(gs)
+	initGame(gs)
 
 	quit := func() {
 		// You have to catch panics in a defer, clean up, and
@@ -143,33 +239,26 @@ func main() {
 	tick := make(chan int)
 
 	go keyboardEventLoop(keyEvent, kill, gs)
+	go startTicker(tick)
 
-	go func() {
-		ticknum := 0
-		for {
-			time.Sleep(time.Millisecond * TICK_RATE)
-			tick <- ticknum
-			ticknum++
-		}
-	}()
-
-	// game loop
 	for {
 		gs.screen.Clear()
 
 		select {
+		case <-kill:
+			return
 		case ev := <-keyEvent:
 			if ev == tcell.KeyUp {
 				gs.p1.up()
 			} else {
 				gs.p1.down()
 			}
-
-		case <-kill:
-			return
-
 		case <-tick:
-			gs.moveBall()
+			if !gs.ball.locked() {
+				gs.moveBall()
+			} else {
+				gs.ball.countdown()
+			}
 		}
 
 		drawBorder(gs.screen)
@@ -177,6 +266,15 @@ func main() {
 		drawLeftPaddle(gs)
 		drawRightPaddle(gs)
 		gs.screen.Show()
+	}
+}
+
+func startTicker(tick chan int) {
+	ticknum := 0
+	for {
+		time.Sleep(time.Millisecond * TICK_RATE)
+		tick <- ticknum
+		ticknum++
 	}
 }
 
@@ -201,14 +299,13 @@ func keyboardEventLoop(ch chan tcell.Key, kill chan bool, gs gameState) {
 
 // returns string direction
 // "L" left, "R" - right, "TL" top-left, "TR" top-right, "BL" bottom-left, "RL" right-left
-func calculateCollision(ball ball, paddle coord) (bool, string) {
+func calculateCollision(ball ball, paddle coord) (bool, dir) {
 	// collided with top or bottom, reflect
 	if ball.y == 2 || ball.y == 40 {
 		return true, getOpposite(ball.dir)
 	}
 
 	// collision on paddle
-	//left paddle
 	log.Printf("paddle: x: %d, top: %d, bott: %d", paddle.x, paddle.yTop, paddle.yBot)
 	if (ball.y <= paddle.yBot && ball.y >= paddle.yTop) && (ball.x == paddle.x+1 || ball.x == paddle.x-1) {
 		log.Printf("Calcing collision\npaddle: %v\n ball: %v\n", paddle, ball)
@@ -221,92 +318,84 @@ func calculateCollision(ball ball, paddle coord) (bool, string) {
 		}
 
 	}
-	return false, ""
+	return false, 0
 }
 
-func calcPaddleCollision(paddle coord, ball ball, side string) string {
+func calcPaddleCollision(paddle coord, ball ball, side string) dir {
 	log.Printf("calculating paddle coll. \n\tpaddle: %+v\n\tball: %+v\n\tside: %s\n", paddle, ball, side)
 	mid := math.Round(float64(paddle.yBot-paddle.yTop) / 2)
 	if ball.y == int(mid) {
 		if side == "L" {
-			return "R"
+			return RIGHT
 		}
 		if side == "R" {
-			return "L"
+			return LEFT
 		}
 	}
 
 	if ball.y > int(mid) {
 		opp := oppositeAngle(ball.dir)
-		if opp == "" {
+		if opp == 0 {
 			opp = oppositeNonAngle(ball.dir, "T")
 		}
+
 		return opp
 	} else {
-		if ball.y < int(mid) {
-			opp := oppositeAngle(ball.dir)
-			if opp == "" {
-				opp = oppositeNonAngle(ball.dir, "B")
-			}
-			return opp
+		opp := oppositeAngle(ball.dir)
+		if opp == 0 {
+			opp = oppositeNonAngle(ball.dir, "B")
 		}
-	}
 
-	return ""
+		return opp
+	}
 }
 
-func oppositeNonAngle(dir string, y string) string {
+func oppositeNonAngle(dir dir, y string) dir {
 	switch dir {
-	case "L":
+	case LEFT:
 		if y == "T" {
-			return "TR"
+			return UP_RIGHT
 		} else {
-			return "BR"
+			return DOWN_RIGHT
 		}
 	default:
 		if y == "T" {
-			return "TL"
+			return UP_LEFT
 		} else {
-			return "BL"
+			return DOWN_LEFT
 		}
 	}
 }
 
-func oppositeAngle(dir string) string {
+func oppositeAngle(dir dir) dir {
 	switch dir {
-
-	case "TL":
-		return "TR"
-	case "TR":
-		return "TL"
-	case "BR":
-		return "BL"
-	case "BL":
-		return "BR"
-
+	case UP_LEFT:
+		return UP_RIGHT
+	case UP_RIGHT:
+		return UP_LEFT
+	case DOWN_RIGHT:
+		return DOWN_LEFT
+	case DOWN_LEFT:
+		return DOWN_RIGHT
 	default:
-		return ""
-
+		return 0
 	}
 }
 
-func getOpposite(dir string) string {
+func getOpposite(dir dir) dir {
 	switch dir {
-	case "L":
-		return "R"
-	case "R":
-		return "L"
-	case "TL":
-		return "BL"
-	case "TR":
-		return "BR"
-	case "BR":
-		return "TR"
-	case "BL":
-		return "TL"
-
+	case LEFT:
+		return RIGHT
+	case RIGHT:
+		return LEFT
+	case UP_LEFT:
+		return DOWN_LEFT
+	case UP_RIGHT:
+		return DOWN_RIGHT
+	case DOWN_RIGHT:
+		return UP_RIGHT
 	default:
-		return ""
+		return UP_LEFT
 	}
 }
 
