@@ -16,6 +16,12 @@ const TICK_RATE = 75
 
 // how many ticks for countdown lock to be unlocked
 const LOCK = 10
+const UNLOCKED = 0
+
+const DEFAULT_LEFT_X = 2
+const DEFAULT_RIGHT_X = 110
+const MID_X = 55
+const MID_Y = 20
 
 type dir int
 
@@ -79,21 +85,34 @@ func Dir(s int) dir {
 
 type gameState struct {
 	screen tcell.Screen
-	p1     *coord
-	p2     *coord
+	p1     *player
+	p2     *player
 	ball   *ball
 	ticks  int
 }
 
+func newGame(s tcell.Screen) gameState {
+	return gameState{screen: s, p1: newPlayer(DEFAULT_LEFT_X), p2: newPlayer(DEFAULT_RIGHT_X), ball: &ball{MID_X, MID_Y, randomDirection(), UNLOCKED}, ticks: 0}
+}
+
+type player struct {
+	score  int
+	paddle *paddle
+}
+
+func newPlayer(x int) *player {
+	return &player{score: 0, paddle: &paddle{2, 5, x}}
+}
+
 func (gs *gameState) moveBall() {
-	var paddle *coord
+	var paddle *paddle
 	origDir := gs.ball.dir
 
 	switch getGeneralDirection(gs.ball.dir) {
 	case LEFT:
-		paddle = gs.p1
+		paddle = gs.p1.paddle
 	default:
-		paddle = gs.p2
+		paddle = gs.p2.paddle
 	}
 
 	coll, newDir := calculateCollision(*gs.ball, *paddle)
@@ -167,18 +186,18 @@ func (b *ball) countdown() {
 	}
 }
 
-type coord struct {
+type paddle struct {
 	yTop int
 	yBot int
 	x    int
 }
 
-func (c *coord) up() {
+func (c *paddle) up() {
 	c.yBot -= 1
 	c.yTop -= 1
 }
 
-func (c *coord) down() {
+func (c *paddle) down() {
 	c.yBot += 1
 	c.yTop += 1
 }
@@ -217,7 +236,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	gs := gameState{screen: s, p1: &coord{2, 5, 2}, p2: &coord{2, 5, 110}, ball: &ball{55, 20, randomDirection(), 0}, ticks: 0}
+	gs := newGame(s)
 
 	initGame(gs)
 
@@ -249,9 +268,9 @@ func main() {
 			return
 		case ev := <-keyEvent:
 			if ev == tcell.KeyUp {
-				gs.p1.up()
+				gs.p1.paddle.up()
 			} else {
-				gs.p1.down()
+				gs.p1.paddle.down()
 			}
 		case <-tick:
 			if !gs.ball.locked() {
@@ -299,7 +318,7 @@ func keyboardEventLoop(ch chan tcell.Key, kill chan bool, gs gameState) {
 
 // returns string direction
 // "L" left, "R" - right, "TL" top-left, "TR" top-right, "BL" bottom-left, "RL" right-left
-func calculateCollision(ball ball, paddle coord) (bool, dir) {
+func calculateCollision(ball ball, paddle paddle) (bool, dir) {
 	// collided with top or bottom, reflect
 	if ball.y == 2 || ball.y == 40 {
 		return true, getOpposite(ball.dir)
@@ -321,7 +340,7 @@ func calculateCollision(ball ball, paddle coord) (bool, dir) {
 	return false, 0
 }
 
-func calcPaddleCollision(paddle coord, ball ball, side string) dir {
+func calcPaddleCollision(paddle paddle, ball ball, side string) dir {
 	log.Printf("calculating paddle coll. \n\tpaddle: %+v\n\tball: %+v\n\tside: %s\n", paddle, ball, side)
 	mid := math.Round(float64(paddle.yBot-paddle.yTop) / 2)
 	if ball.y == int(mid) {
@@ -401,9 +420,9 @@ func getOpposite(dir dir) dir {
 
 func movePaddle(gs gameState, dir tcell.Key) {
 	if dir == tcell.KeyUp {
-		gs.p1.up()
+		gs.p1.paddle.up()
 	} else {
-		gs.p1.down()
+		gs.p1.paddle.down()
 	}
 
 	gs.screen.Show()
@@ -442,17 +461,17 @@ func drawBorder(s tcell.Screen) error {
 }
 
 func drawLeftPaddle(gs gameState) {
-	drawPaddle(gs.p1, gs.screen)
+	drawPaddle(gs.p1.paddle, gs.screen)
 }
 
 // "AI" matches the balls y value for now
 func drawRightPaddle(gs gameState) {
-	drawPaddle(&coord{gs.ball.y - 2, gs.ball.y + 1, 110}, gs.screen)
-	gs.p2.yTop = gs.ball.y - 2
-	gs.p2.yBot = gs.ball.y + 1
+	drawPaddle(&paddle{gs.ball.y - 2, gs.ball.y + 1, 110}, gs.screen)
+	gs.p2.paddle.yTop = gs.ball.y - 2
+	gs.p2.paddle.yBot = gs.ball.y + 1
 }
 
-func drawPaddle(p *coord, s tcell.Screen) {
+func drawPaddle(p *paddle, s tcell.Screen) {
 	// Left is x = 1, should start at y = 2, end at y = 6
 
 	style := tcell.StyleDefault.Foreground(tcell.ColorWhite)
