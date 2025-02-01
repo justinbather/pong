@@ -15,6 +15,9 @@ import (
 // how many ticks for ball to move
 const TICK_RATE = 75
 
+const TOP = 2
+const BOTTOM = 40
+
 // how many ticks for countdown lock to be unlocked
 const LOCK = 10
 const UNLOCKED = 0
@@ -77,10 +80,8 @@ func Dir(s int) dir {
 		return DOWN_RIGHT
 	case 7:
 		return UP_LEFT
-	case 8:
-		return DOWN_LEFT
 	default:
-		return 0
+		return DOWN_LEFT
 	}
 }
 
@@ -156,7 +157,7 @@ func (b *ball) next() (int, int) {
 	case LEFT:
 		return b.x - 1, b.y
 	case RIGHT:
-		return b.x, b.y + 1
+		return b.x + 1, b.y
 	case UP_LEFT:
 		return b.x - 1, b.y - 1
 	case UP_RIGHT:
@@ -199,13 +200,17 @@ type paddle struct {
 }
 
 func (c *paddle) up() {
-	c.yBot -= 1
-	c.yTop -= 1
+	if c.yTop != TOP {
+		c.yBot -= 1
+		c.yTop -= 1
+	}
 }
 
 func (c *paddle) down() {
-	c.yBot += 1
-	c.yTop += 1
+	if c.yBot != BOTTOM {
+		c.yBot += 1
+		c.yTop += 1
+	}
 }
 
 func initGame(gs gameState) {
@@ -502,9 +507,26 @@ func drawLeftPaddle(gs gameState) {
 
 // "AI" matches the balls y value for now
 func drawRightPaddle(gs gameState) {
-	drawPaddle(&paddle{gs.ball.y - 2, gs.ball.y + 1, 110}, gs.screen)
-	gs.p2.paddle.yTop = gs.ball.y - 2
-	gs.p2.paddle.yBot = gs.ball.y + 1
+	yTop := gs.ball.y - 2
+	yBot := gs.ball.y + 1
+
+	// check bounds
+	if yTop < TOP {
+		drawPaddle(&paddle{TOP, TOP + 3, 110}, gs.screen)
+		gs.p2.paddle.yTop = TOP
+		gs.p2.paddle.yBot = TOP + 3
+		return
+	} else if yBot > BOTTOM {
+		drawPaddle(&paddle{BOTTOM - 3, BOTTOM, 110}, gs.screen)
+		gs.p2.paddle.yTop = BOTTOM - 3
+		gs.p2.paddle.yBot = BOTTOM
+		return
+	} else {
+		drawPaddle(&paddle{gs.ball.y - 2, gs.ball.y + 1, 110}, gs.screen)
+		gs.p2.paddle.yTop = gs.ball.y - 2
+		gs.p2.paddle.yBot = gs.ball.y + 1
+	}
+
 }
 
 func drawPaddle(p *paddle, s tcell.Screen) {
