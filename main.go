@@ -16,12 +16,19 @@ import (
 const TICK_RATE = 75
 
 // dimensions
-const TOP = 2
-const BOTTOM = 40
-const DEFAULT_LEFT_X = 2
-const DEFAULT_RIGHT_X = 110
-const MID_X = 55
-const MID_Y = 20
+const MAX_HEIGHT = 40
+const MAX_WIDTH = 110
+
+// haha this is basically c now
+// when the game starts this loads based on screen size
+var GAME_TOP = 0
+var GAME_BOTTOM = 0
+var GAME_LEFT = 0
+var GAME_RIGHT = 0
+var GAME_MID_X = 0
+var GAME_MID_Y = 0
+
+const PADDLE_WIDTH = 3
 
 // how many ticks for countdown lock to be unlocked
 // makeshift CountdownLatch - not thread safe at all but thats ok
@@ -94,8 +101,28 @@ type gameState struct {
 	ticks  int
 }
 
+func getRight(s tcell.Screen) int {
+	x, _ := s.Size()
+	return x/2 + MAX_WIDTH/2
+}
+
+func getLeft(s tcell.Screen) int {
+	x, _ := s.Size()
+	return x/2 - MAX_WIDTH/2
+}
+
+func getTop(s tcell.Screen) int {
+	_, y := s.Size()
+	return y/2 - MAX_HEIGHT/2
+}
+
+func getBottom(s tcell.Screen) int {
+	_, y := s.Size()
+	return y/2 + MAX_HEIGHT/2
+}
+
 func newGame(s tcell.Screen) gameState {
-	return gameState{screen: s, p1: newPlayer(DEFAULT_LEFT_X), p2: newPlayer(DEFAULT_RIGHT_X), ball: &ball{MID_X, MID_Y, randomDirection(), UNLOCKED}, ticks: 0}
+	return gameState{screen: s, p1: newPlayer(s, getLeft(s)+1), p2: newPlayer(s, getRight(s)-1), ball: &ball{GAME_MID_X, GAME_MID_Y, randomDirection(), UNLOCKED}, ticks: 0}
 }
 
 type player struct {
@@ -103,8 +130,9 @@ type player struct {
 	paddle *paddle
 }
 
-func newPlayer(x int) *player {
-	return &player{score: 0, paddle: &paddle{2, 5, x}}
+func newPlayer(s tcell.Screen, x int) *player {
+	_, y := s.Size()
+	return &player{score: 0, paddle: &paddle{y / 2, y/2 + PADDLE_WIDTH, x}}
 }
 
 func (gs *gameState) moveBall() {
@@ -127,8 +155,8 @@ func (gs *gameState) moveBall() {
 	gs.ball.x = x
 	gs.ball.y = y
 
-	if x < 2 || x > 110 {
-		if x < 2 {
+	if x <= GAME_LEFT || x >= GAME_RIGHT {
+		if x <= GAME_LEFT {
 			gs.p2.score += 1
 		} else {
 			gs.p1.score += 1
@@ -140,7 +168,7 @@ func (gs *gameState) moveBall() {
 }
 
 func (gs *gameState) reset() {
-	gs.ball = &ball{55, 20, randomDirection(), LOCK}
+	gs.ball = &ball{GAME_MID_X, GAME_MID_Y, randomDirection(), LOCK}
 
 }
 
@@ -201,17 +229,13 @@ type paddle struct {
 }
 
 func (c *paddle) up() {
-	if c.yTop != TOP {
-		c.yBot -= 1
-		c.yTop -= 1
-	}
+	c.yBot -= 1
+	c.yTop -= 1
 }
 
 func (c *paddle) down() {
-	if c.yBot != BOTTOM {
-		c.yBot += 1
-		c.yTop += 1
-	}
+	c.yBot += 1
+	c.yTop += 1
 }
 
 func initGame(gs gameState) {
@@ -222,6 +246,29 @@ func initGame(gs gameState) {
 	drawLeftPaddle(gs)
 	drawRightPaddle(gs)
 	drawBall(gs)
+}
+
+func initArena(s tcell.Screen) {
+	top, bot, left, right := getBoardDimensions(s)
+	GAME_TOP = top
+	GAME_BOTTOM = bot
+	GAME_LEFT = left
+	GAME_RIGHT = right
+
+	x, y := s.Size()
+	GAME_MID_X = x / 2
+	GAME_MID_Y = y / 2
+
+}
+
+// returns top, bottom, left, right
+func getBoardDimensions(s tcell.Screen) (int, int, int, int) {
+	top := getTop(s)
+	bot := getBottom(s)
+	left := getLeft(s)
+	right := getRight(s)
+
+	return top, bot, left, right
 }
 
 func randomDirection() dir {
@@ -247,6 +294,8 @@ func main() {
 	if err := s.Init(); err != nil {
 		log.Fatal(err)
 	}
+
+	initArena(s)
 
 	gs := newGame(s)
 
@@ -280,9 +329,13 @@ func main() {
 			return
 		case ev := <-keyEvent:
 			if ev == tcell.KeyUp {
-				gs.p1.paddle.up()
+				if gs.p1.paddle.yTop > GAME_TOP+1 {
+					gs.p1.paddle.up()
+				}
 			} else {
-				gs.p1.paddle.down()
+				if gs.p1.paddle.yBot < GAME_BOTTOM-1 {
+					gs.p1.paddle.down()
+				}
 			}
 		case <-tick:
 			if !gs.ball.locked() {
@@ -292,11 +345,11 @@ func main() {
 			}
 		}
 
-		//drawScore(gs.screen, gs.p1.score, gs.p2.score)
+		drawScore(gs.screen, gs.p1.score, gs.p2.score)
 		drawBorder(gs.screen)
-		//drawBall(gs)
-		//drawLeftPaddle(gs)
-		//drawRightPaddle(gs)
+		drawBall(gs)
+		drawLeftPaddle(gs)
+		drawRightPaddle(gs)
 		gs.screen.Show()
 	}
 }
@@ -317,6 +370,7 @@ func keyboardEventLoop(ch chan tcell.Key, kill chan bool, gs gameState) {
 		switch ev := ev.(type) {
 		case *tcell.EventResize:
 			gs.screen.Sync()
+			initArena(gs.screen)
 		case *tcell.EventKey:
 			if ev.Key() == tcell.KeyEscape || ev.Key() == tcell.KeyCtrlC {
 				kill <- true
@@ -331,8 +385,8 @@ func keyboardEventLoop(ch chan tcell.Key, kill chan bool, gs gameState) {
 
 // returns string direction
 func calculateCollision(ball ball, paddle paddle) (bool, dir) {
-	// collided with top or bottom, reflect
-	if ball.y == 2 || ball.y == 40 {
+	// collided with top or bottom (offset by 1 so it doesnt go into the border), reflect
+	if ball.y == GAME_TOP+1 || ball.y == GAME_BOTTOM-1 {
 		return true, getOpposite(ball.dir)
 	}
 
@@ -442,26 +496,26 @@ func movePaddle(gs gameState, dir tcell.Key) {
 
 func drawScore(s tcell.Screen, p1, p2 int) {
 	// under the border for now?
-	y := 42
+	y := GAME_BOTTOM + 2
 	//mid := 55
 	// score
 
 	style := tcell.StyleDefault.Foreground(tcell.ColorWhite)
-	s.SetContent(53, y, 'S', nil, style)
-	s.SetContent(54, y, 'C', nil, style)
-	s.SetContent(55, y, 'O', nil, style)
-	s.SetContent(56, y, 'R', nil, style)
-	s.SetContent(57, y, 'E', nil, style)
+	s.SetContent(GAME_MID_X-2, y, 'S', nil, style)
+	s.SetContent(GAME_MID_X-1, y, 'C', nil, style)
+	s.SetContent(GAME_MID_X, y, 'O', nil, style)
+	s.SetContent(GAME_MID_X+1, y, 'R', nil, style)
+	s.SetContent(GAME_MID_X+2, y, 'E', nil, style)
 
 	// p1
 	p1Score := getRuneScore(p1)
 	for i, r := range p1Score {
-		s.SetContent(47+i, y+1, r, nil, style)
+		s.SetContent(GAME_MID_X-8+i, y+1, r, nil, style)
 	}
 
 	p2Score := getRuneScore(p2)
 	for i, r := range p2Score {
-		s.SetContent(61+i, y+1, r, nil, style)
+		s.SetContent(GAME_MID_X+6+i, y+1, r, nil, style)
 	}
 }
 
@@ -479,9 +533,6 @@ func drawBorder(s tcell.Screen) error {
 	midY := h / 2
 	midX := w / 2
 
-	maxW := 110
-	maxH := 40
-
 	style := tcell.StyleDefault.Foreground(tcell.ColorWhite)
 
 	/*
@@ -494,22 +545,22 @@ func drawBorder(s tcell.Screen) error {
 	*/
 
 	// Draw top and bottom horizontal borders
-	for x := midX - maxW/2; x <= maxW/2+midX; x++ {
-		s.SetContent(x, midY-1-maxH/2, tcell.RuneHLine, nil, style) // Top border
-		s.SetContent(x, midY+1+maxH/2, tcell.RuneHLine, nil, style) // Bottom border
+	for x := midX - MAX_WIDTH/2; x <= MAX_WIDTH/2+midX; x++ {
+		s.SetContent(x, GAME_TOP, tcell.RuneHLine, nil, style)    // Top border
+		s.SetContent(x, GAME_BOTTOM, tcell.RuneHLine, nil, style) // Bottom border
 	}
 
 	// Draw left and right vertical borders
-	for y := midY - maxH/2; y <= maxH/2+midY; y++ {
-		s.SetContent(midX-1-maxW/2, y, tcell.RuneVLine, nil, style) // Left border
-		s.SetContent(midX+1+maxW/2, y, tcell.RuneVLine, nil, style) // Right border
+	for y := midY - MAX_HEIGHT/2; y <= MAX_HEIGHT/2+midY; y++ {
+		s.SetContent(GAME_LEFT, y, tcell.RuneVLine, nil, style)  // Left border
+		s.SetContent(GAME_RIGHT, y, tcell.RuneVLine, nil, style) // Right border
 	}
 
 	// Draw corners
-	s.SetContent(midX-1-maxW/2, midY-1-maxH/2, tcell.RuneULCorner, nil, style) // Upper left corner
-	s.SetContent(midX+1+maxW/2, midY-1-maxH/2, tcell.RuneURCorner, nil, style) // Upper right corner
-	s.SetContent(midX-1-maxW/2, midY+1+maxH/2, tcell.RuneLLCorner, nil, style) // Lower left corner
-	s.SetContent(midX+1+maxW/2, midY+1+maxH/2, tcell.RuneLRCorner, nil, style) // Lower right corner
+	s.SetContent(GAME_LEFT, GAME_TOP, tcell.RuneULCorner, nil, style)     // Upper left corner
+	s.SetContent(GAME_RIGHT, GAME_TOP, tcell.RuneURCorner, nil, style)    // Upper right corner
+	s.SetContent(GAME_LEFT, GAME_BOTTOM, tcell.RuneLLCorner, nil, style)  // Lower left corner
+	s.SetContent(GAME_RIGHT, GAME_BOTTOM, tcell.RuneLRCorner, nil, style) // Lower right corner
 
 	return nil
 }
@@ -524,18 +575,18 @@ func drawRightPaddle(gs gameState) {
 	yBot := gs.ball.y + 1
 
 	// check bounds
-	if yTop < TOP {
-		drawPaddle(&paddle{TOP, TOP + 3, 110}, gs.screen)
-		gs.p2.paddle.yTop = TOP
-		gs.p2.paddle.yBot = TOP + 3
+	if yTop <= GAME_TOP+1 {
+		drawPaddle(&paddle{GAME_TOP + 1, GAME_TOP + 4, gs.p2.paddle.x}, gs.screen)
+		gs.p2.paddle.yTop = GAME_TOP + 1
+		gs.p2.paddle.yBot = GAME_TOP + 4
 		return
-	} else if yBot > BOTTOM {
-		drawPaddle(&paddle{BOTTOM - 3, BOTTOM, 110}, gs.screen)
-		gs.p2.paddle.yTop = BOTTOM - 3
-		gs.p2.paddle.yBot = BOTTOM
+	} else if yBot >= GAME_BOTTOM-1 {
+		drawPaddle(&paddle{GAME_BOTTOM - 4, GAME_BOTTOM - 1, gs.p2.paddle.x}, gs.screen)
+		gs.p2.paddle.yTop = GAME_BOTTOM - 4
+		gs.p2.paddle.yBot = GAME_BOTTOM - 1
 		return
 	} else {
-		drawPaddle(&paddle{gs.ball.y - 2, gs.ball.y + 1, 110}, gs.screen)
+		drawPaddle(&paddle{gs.ball.y - 2, gs.ball.y + 1, gs.p2.paddle.x}, gs.screen)
 		gs.p2.paddle.yTop = gs.ball.y - 2
 		gs.p2.paddle.yBot = gs.ball.y + 1
 	}
