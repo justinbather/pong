@@ -12,20 +12,21 @@ import (
 	"github.com/gdamore/tcell"
 )
 
-// how many ticks for ball to move
+// how many millisecs between ticks
 const TICK_RATE = 75
 
+// dimensions
 const TOP = 2
 const BOTTOM = 40
-
-// how many ticks for countdown lock to be unlocked
-const LOCK = 10
-const UNLOCKED = 0
-
 const DEFAULT_LEFT_X = 2
 const DEFAULT_RIGHT_X = 110
 const MID_X = 55
 const MID_Y = 20
+
+// how many ticks for countdown lock to be unlocked
+// makeshift CountdownLatch - not thread safe at all but thats ok
+const LOCK = 10
+const UNLOCKED = 0
 
 type dir int
 
@@ -291,11 +292,11 @@ func main() {
 			}
 		}
 
-		drawScore(gs.screen, gs.p1.score, gs.p2.score)
+		//drawScore(gs.screen, gs.p1.score, gs.p2.score)
 		drawBorder(gs.screen)
-		drawBall(gs)
-		drawLeftPaddle(gs)
-		drawRightPaddle(gs)
+		//drawBall(gs)
+		//drawLeftPaddle(gs)
+		//drawRightPaddle(gs)
 		gs.screen.Show()
 	}
 }
@@ -471,32 +472,44 @@ func getRuneScore(score int) []rune {
 
 func drawBorder(s tcell.Screen) error {
 	w, h := s.Size()
-	if w < 50 || h < 50 {
+	if w < 150 || h < 60 {
 		return errors.New("Window too small")
 	}
+
+	midY := h / 2
+	midX := w / 2
 
 	maxW := 110
 	maxH := 40
 
 	style := tcell.StyleDefault.Foreground(tcell.ColorWhite)
 
+	/*
+		* To calculate the placement of the borders we get the middle x and y
+		 for x axis, we use the middle, minus half of our board size, and draw over until mid x + half of board size
+
+		* we then bump the borders out by 1 to accomodate for the corners
+
+		* repeat on y axis
+	*/
+
 	// Draw top and bottom horizontal borders
-	for x := 1; x <= maxW; x++ {
-		s.SetContent(x, 1, tcell.RuneHLine, nil, style)      // Top border
-		s.SetContent(x, maxH+1, tcell.RuneHLine, nil, style) // Bottom border
+	for x := midX - maxW/2; x <= maxW/2+midX; x++ {
+		s.SetContent(x, midY-1-maxH/2, tcell.RuneHLine, nil, style) // Top border
+		s.SetContent(x, midY+1+maxH/2, tcell.RuneHLine, nil, style) // Bottom border
 	}
 
 	// Draw left and right vertical borders
-	for y := 1; y <= maxH; y++ {
-		s.SetContent(1, y, tcell.RuneVLine, nil, style)      // Left border
-		s.SetContent(maxW+1, y, tcell.RuneVLine, nil, style) // Right border
+	for y := midY - maxH/2; y <= maxH/2+midY; y++ {
+		s.SetContent(midX-1-maxW/2, y, tcell.RuneVLine, nil, style) // Left border
+		s.SetContent(midX+1+maxW/2, y, tcell.RuneVLine, nil, style) // Right border
 	}
 
 	// Draw corners
-	s.SetContent(1, 1, tcell.RuneULCorner, nil, style)           // Upper left corner
-	s.SetContent(maxW+1, 1, tcell.RuneURCorner, nil, style)      // Upper right corner
-	s.SetContent(1, maxH+1, tcell.RuneLLCorner, nil, style)      // Lower left corner
-	s.SetContent(maxW+1, maxH+1, tcell.RuneLRCorner, nil, style) // Lower right corner
+	s.SetContent(midX-1-maxW/2, midY-1-maxH/2, tcell.RuneULCorner, nil, style) // Upper left corner
+	s.SetContent(midX+1+maxW/2, midY-1-maxH/2, tcell.RuneURCorner, nil, style) // Upper right corner
+	s.SetContent(midX-1-maxW/2, midY+1+maxH/2, tcell.RuneLLCorner, nil, style) // Lower left corner
+	s.SetContent(midX+1+maxW/2, midY+1+maxH/2, tcell.RuneLRCorner, nil, style) // Lower right corner
 
 	return nil
 }
