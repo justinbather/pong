@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"math"
 	"math/rand"
@@ -125,6 +126,11 @@ func (gs *gameState) moveBall() {
 	gs.ball.y = y
 
 	if x < 2 || x > 110 {
+		if x < 2 {
+			gs.p2.score += 1
+		} else {
+			gs.p1.score += 1
+		}
 		gs.reset()
 	}
 
@@ -280,6 +286,7 @@ func main() {
 			}
 		}
 
+		drawScore(gs.screen, gs.p1.score, gs.p2.score)
 		drawBorder(gs.screen)
 		drawBall(gs)
 		drawLeftPaddle(gs)
@@ -317,7 +324,6 @@ func keyboardEventLoop(ch chan tcell.Key, kill chan bool, gs gameState) {
 }
 
 // returns string direction
-// "L" left, "R" - right, "TL" top-left, "TR" top-right, "BL" bottom-left, "RL" right-left
 func calculateCollision(ball ball, paddle paddle) (bool, dir) {
 	// collided with top or bottom, reflect
 	if ball.y == 2 || ball.y == 40 {
@@ -426,6 +432,36 @@ func movePaddle(gs gameState, dir tcell.Key) {
 	}
 
 	gs.screen.Show()
+}
+
+func drawScore(s tcell.Screen, p1, p2 int) {
+	// under the border for now?
+	y := 42
+	//mid := 55
+	// score
+
+	style := tcell.StyleDefault.Foreground(tcell.ColorWhite)
+	s.SetContent(53, y, 'S', nil, style)
+	s.SetContent(54, y, 'C', nil, style)
+	s.SetContent(55, y, 'O', nil, style)
+	s.SetContent(56, y, 'R', nil, style)
+	s.SetContent(57, y, 'E', nil, style)
+
+	// p1
+	p1Score := getRuneScore(p1)
+	for i, r := range p1Score {
+		s.SetContent(47+i, y+1, r, nil, style)
+	}
+
+	p2Score := getRuneScore(p2)
+	for i, r := range p2Score {
+		s.SetContent(61+i, y+1, r, nil, style)
+	}
+}
+
+func getRuneScore(score int) []rune {
+	scoreStr := fmt.Sprintf("%03d", score) // Format to always be 3 digits
+	return []rune(scoreStr)
 }
 
 func drawBorder(s tcell.Screen) error {
